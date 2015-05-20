@@ -1,5 +1,5 @@
 <?php
-	include("/global.php");
+	include("./global.php");
 	session_start();
 	$error="";
 	if ($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -29,7 +29,7 @@
 	}
 	}
 ?>
-
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -43,7 +43,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container login">
 
     <form class="form-signin" action="" method="POST">
         <h2 class="form-signin-heading">ShopMap | Gestione utenti</h2>

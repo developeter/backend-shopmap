@@ -1,43 +1,33 @@
 ﻿<?php
 
-	include=("/global.php");
-	
-	$username = $_POST('username');
-	$password = $_POST('password');
-	$email = $_POST('email');
+	include("./global.php");
 	$error = "";
 	
-	if($_POST) {
-		if($username != "" OR $password != ""){
-			if($email != ""){
-				$query="INSERT INTO login (username, password, email) VALUES ('".$username."', '".$password."', '".$email"');";
+	if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+		if($_POST['username'] != "" || $_POST['password'] != ""){
+			if($_POST['email'] != ""){
+				
+				$username=htmlspecialchars($_POST['username']);
+				$password=htmlspecialchars($_POST['password']);
+				$email=htmlspecialchars($_POST['email']);
+				
+				$query="INSERT INTO login (username, password, email) VALUES ('" . $username . "', '" . $password . "', '" . $email . "');";
 				// connetto al server
-				$connection = mysqli_connect("localhost", $userdb, $dbpw);
-				// pulisco input
-				$username = stripslashes($username);
-				$password = stripslashes($password);
-				$email = stripslashes($email);
-				$username = mysqli_real_escape_string($username);
-				$password = mysqli_real_escape_string($password);
+				$connection = mysqli_connect("127.0.0.1", $userdb, $dbpw);
 				//selezione db
-				$db = mysqli_select_db("shopmap", $connection);
+				mysqli_select_db($connection, $dbname) or die("Could not select database");
 				//setto la query
-				$result = mysqli_query($query);
-				(if !$result){
-					$error = "Errore connessione al database.";
-				}else{
-					$error = "Registrato.";
-					$error.= "<a href='./profile.php'>Vai al profilo</a>";
-				}
+				mysqli_query($connection, $query) or die(mysqli_error($connection));
+				$error = 'Registrato.&nbsp;<a href="profile.php">Vai al profilo</a>';
 				mysqli_close($connection);
 			}else{
-				$error = "Il campo email non può essere vuoto!";
+				$error .= "Il campo email non può essere vuoto! <br>";
 			}
 		}else{
-			$error = "I campi nome utente e password non possono essere vuoti!";
+			$error .= "I campi nome utente e password non possono essere vuoti! <br>";
 		}
 	}
-		
+
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -55,21 +45,20 @@
 <body>
 <div class="container">
 <div class="jumbotron">
-    <form class="form-horizontal" action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
+    <form class="form-horizontal" action="" method="POST">
         <fieldset>
-
 
             <div class="form-group">
                 <label for="email" class="col-sm-2 col-lg-2 control-label">Email</label>
                 <div class="col-sm-5 col-lg-5">
-                    <input type="text" class="form-control" id="email" placeholder="Inserisci l'indirizzo email...">
+                    <input type="text" class="form-control" id="email" name="email" placeholder="Inserisci l'indirizzo email">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="nome" class="col-sm-2 col-lg-2 control-label">Username</label>
+                <label for="nome" class="col-sm-2 col-lg-2 control-label">Nome utente</label>
                 <div class="col-sm-5 col-lg-5">
-                    <input type="text" class="form-control" id="nome" placeholder="Inserisci il nome...">
+                    <input type="text" class="form-control" id="nome" name="username" placeholder="Inserisci il nome utente">
                 </div>
             </div>
 
@@ -77,13 +66,13 @@
             <div class="form-group">
                 <label for="password" class="col-sm-2 col-lg-2 control-label">Password</label>
                 <div class="col-sm-5 col-lg-5">
-                    <input type="password" class="form-control" id="password" placeholder="Inserisci la password...">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Inserisci la password">
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="col-sm-5 col-lg-5 col-sm-offset-2">
-                    <button type="submit" class="btn btn-default">Invia</button>
+                    <button type="submit" id="submit" class="btn btn-default">Invia registrazione</button>
                 </div>
             </div>
 
