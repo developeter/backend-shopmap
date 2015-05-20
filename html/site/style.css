@@ -1,0 +1,10 @@
+.container {
+    max-width: 400px;
+}
+    
+.error {
+    color: red;
+    text-align: center;
+    text-decoration: underline;
+    font-size: large;
+}
